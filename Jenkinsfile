@@ -13,7 +13,11 @@ pipeline {
         stage('Deploy using k8s') {
             
             steps {
-                sh "kubectl apply -f . --kubeconfig=/home/elkasaby/Desktop/introToDevops/config"
+                configFileProvider([configFile(fileId: 'kubeconfig', variable: 'k8s_config')]) {
+                    sh """
+                        kubectl apply -f .  --kubeconfig=$k8s_config
+                    """
+                }
             }
         }
     }
