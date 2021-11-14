@@ -17,6 +17,7 @@ spec:
       containers:
       - image: kareemelkasaby/bakehouse
         name: bakehouse
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         resources: {}
