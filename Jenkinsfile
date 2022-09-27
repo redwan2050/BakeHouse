@@ -13,15 +13,15 @@ pipeline {
           }
         }
       }
-      stage('deploy') {
-        steps {
-          script {
-            withCredentials([file(credentialsId: "kubernetes_kubeconfig", variable: 'KUBECONFIG')]) {
-              sh """
-                  envsubst < Deployment/deploy.yaml | tee Deployment/deploy.yaml 
-                  kubectl apply -f Deployment --kubeconfig=${KUBECONFIG}
+    }
+    stage('deploy') {
+      steps {
+        script {
+          withCredentials([file(credentialsId: "kubernetes_kubeconfig", variable: 'KUBECONFIG')]) {
+            sh """
+                envsubst < Deployment/deploy.yaml | tee Deployment/deploy.yaml 
+                kubectl apply -f Deployment --kubeconfig=${KUBECONFIG}
               """
-            }
           }
         }
       }
