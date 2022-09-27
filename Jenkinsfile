@@ -17,12 +17,13 @@ pipeline {
     stage('deploy') {
       steps {
         script {
-          withCredentials([file(credentialsId: "kubernetes_kubeconfig", variable: 'KUBECONFIG')]) {
-            sh """
-                envsubst < Deployment/deploy.yaml | tee Deployment/deploy.yaml 
-                kubectl apply -f Deployment --kubeconfig=${KUBECONFIG}
-              """
-          }
+          sh """
+              envsubst < Deployment/deploy.yaml | tee Deployment/deploy.yaml 
+              mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
+              cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
+              rm -f Deployment/deploy.yaml.tmp
+              kubectl apply -f Deployment --kubeconfig=${KUBECONFIG}
+            """
         }
       }
     }
