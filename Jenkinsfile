@@ -26,16 +26,18 @@ pipeline {
       steps {
         script {
           if (params.ENV == "dev" || params.ENV == "test" || params.ENV == "prod") {
-            sh """
-                export BUILD_NUMBER=\$(cat ../bakehouse-build-number.txt)
-                mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
-                cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
-                rm -f Deployment/deploy.yaml.tmp
-                kubectl apply -f Deployment
-              """
+            configFileProvider([configFile(fileId: 'Secret file	kubernetes_kubeconfig', variable: 'k8s_config')]) {
+              sh """
+                  export BUILD_NUMBER=\$(cat ../bakehouse-build-number.txt)
+                  mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
+                  cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
+                  rm -f Deployment/deploy.yaml.tmp
+                  kubectl apply -f Deployment --kubeconfig=${k8s_config}
+                """
+            }
           }
-          def STR = "iti 3month nodejs slave abdelrahman"
-          def ARR = STR.split(" ")
+          def STR = "iti,3month,nodejs,slave,abdelrahman"
+          def ARR = STR.split(",")
           for(i in ARR){
             echo i
           }
