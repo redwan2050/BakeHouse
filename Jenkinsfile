@@ -5,6 +5,9 @@ pipeline {
   }
   stages {
     stage('build') {
+      when {
+        expression { return params.ENV == "release"}
+      }
       steps {
         script {
           if (params.ENV == "release") {
@@ -23,6 +26,9 @@ pipeline {
       }
     }
     stage('deploy') {
+      when {
+        expression { return params.ENV == "dev" || params.ENV == "test" || params.ENV == "prod"  }
+      }
       steps {
         script {
           if (params.ENV == "dev" || params.ENV == "test" || params.ENV == "prod") {
