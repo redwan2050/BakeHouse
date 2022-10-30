@@ -26,13 +26,13 @@ pipeline {
       steps {
         script {
           if (params.ENV == "dev" || params.ENV == "test" || params.ENV == "prod") {
-            configFileProvider([configFile(fileId: 'Secret file	kubernetes_kubeconfig', variable: 'k8s_config')]) {
+            withCredentials([file(credentialsId: 'kubernetes_kubeconfig', variable: 'KUBECONFIG')]) {
               sh """
                   export BUILD_NUMBER=\$(cat ../bakehouse-build-number.txt)
                   mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
                   cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
                   rm -f Deployment/deploy.yaml.tmp
-                  kubectl apply -f Deployment --kubeconfig=${k8s_config}
+                  kubectl apply -f Deployment --kubeconfig=${KUBECONFIG}
                 """
             }
           }
