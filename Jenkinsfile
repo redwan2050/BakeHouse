@@ -13,6 +13,7 @@ pipeline {
                   docker login -u ${USERNAME} -p ${PASSWORD}
                   docker build -t kareemelkasaby/vfbakehouse:${BUILD_NUMBER} .
                   docker push kareemelkasaby/vfbakehouse:${BUILD_NUMBER}
+                  echo ${BUILD_NUMBER} > ../bakehouse-build-number.txt
               """
             }
           }
@@ -23,6 +24,7 @@ pipeline {
       steps {
         script {
           sh """
+              export BUILD_NUMBER=$(cat ../bakehouse-build-number.txt)
               mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
               cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
               rm -f Deployment/deploy.yaml.tmp
