@@ -7,12 +7,14 @@ pipeline {
     stage('build') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            sh """
-                docker login -u ${USERNAME} -p ${PASSWORD}
-                docker build -t kareemelkasaby/vfbakehouse:${BUILD_NUMBER} .
-                docker push kareemelkasaby/vfbakehouse:${BUILD_NUMBER}
-            """
+          if (params.ENV == "release") {
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+              sh """
+                  docker login -u ${USERNAME} -p ${PASSWORD}
+                  docker build -t kareemelkasaby/vfbakehouse:${BUILD_NUMBER} .
+                  docker push kareemelkasaby/vfbakehouse:${BUILD_NUMBER}
+              """
+            }
           }
         }
       }
