@@ -34,10 +34,11 @@ pipeline {
                 kubectl apply -f Deployment
               """
           }
-        def ARR = ["iti","3month","nodejs","slave","abdelrahman"]
-        for(i in ARR){
-          echo $i
-        }
+          def STR = "iti 3month nodejs slave abdelrahman"
+          def ARR = STR.split(" ")
+          for(i in ARR){
+            echo i
+          }
         }
       }
     }
