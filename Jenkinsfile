@@ -16,6 +16,8 @@ pipeline {
                   echo ${BUILD_NUMBER} > ../bakehouse-build-number.txt
               """
             }
+          } else {
+            sh 'echo "user choosed ${ENV}"'
           }
         }
       }
@@ -23,13 +25,15 @@ pipeline {
     stage('deploy') {
       steps {
         script {
-          sh """
-              export BUILD_NUMBER=\$(cat ../bakehouse-build-number.txt)
-              mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
-              cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
-              rm -f Deployment/deploy.yaml.tmp
-              kubectl apply -f Deployment
-            """
+          if (params.ENV == "dev" || params.ENV == "test" || params.ENV == "prod") {
+            sh """
+                export BUILD_NUMBER=\$(cat ../bakehouse-build-number.txt)
+                mv Deployment/deploy.yaml Deployment/deploy.yaml.tmp
+                cat Deployment/deploy.yaml.tmp | envsubst > Deployment/deploy.yaml
+                rm -f Deployment/deploy.yaml.tmp
+                kubectl apply -f Deployment
+              """
+          }
         }
       }
     }
