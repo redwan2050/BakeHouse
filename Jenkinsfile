@@ -12,14 +12,13 @@ pipeline {
                }
             }
         }
-        stage('test') {
-            steps {
-                echo 'test'
-            }
-        }
         stage('deploy') {
             steps {
-                echo 'deploy'
+                withCredentials([file(credentialsId: 'kubernetes_kubeconfig', variable: 'KUBECONFIG')]) {
+              sh """
+                  kubectl apply -f Deployment --kubeconfig=${KUBECONFIG}
+                """
+            }
             }
         }
     }
