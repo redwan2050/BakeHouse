@@ -3,9 +3,13 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                echo 'build'
-                sh "ls"
-                sh "docker ps"
+               withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                   sh """
+                        docker login -u $USERNAME -p $PASSWORD
+                        docker build -t kareemelkasaby/itimansbakehouse:${BUILD_NUMBER} .
+                        docker push kareemelkasaby/itimansbakehouse:${BUILD_NUMBER}
+                   """
+               }
             }
         }
         stage('test') {
