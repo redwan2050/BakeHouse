@@ -17,6 +17,11 @@ pipeline {
         stage('deploy') {
             steps {
                 echo 'deploy'
+                withCredentials([file(credentialsId: 'iti-aswan-kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh """
+                        kubectl apply -f . --kubeconfig ${KUBECONFIG}
+                    """
+                }
             }
         }
     }
