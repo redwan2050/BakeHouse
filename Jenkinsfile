@@ -30,6 +30,7 @@ pipeline {
                             kubectl apply -f Deployment --kubeconfig ${KUBECONFIG}
                         """
                     }
+                }
             }
         }
     }
