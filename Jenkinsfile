@@ -1,21 +1,17 @@
 pipeline {
-    agent any
+    agent { label 'iti-aswan' }
 
     stages {
-        stage('test') {
-            steps {
-                echo 'test'
-                sh "ls"
-                sh "docker ps"
-            }
-        }
         stage('build') {
             steps {
                 echo 'build'
-                sh """
-                    ls
-                    echo ${build_number}
-                """
+                withCredentials([usernamePassword(credentialsId: 'iti-aswan-dockerhub', usernameVariable: 'USERNAME-ITI', passwordVariable: 'PASSWORD-ITI')]) {
+                    sh """
+                        docker login -u ${USERNAME-ITI}  -p ${PASSWORD-ITI}
+                        docker build -t ${USERNAME-ITI}/iti-aswan-bakehouse:${BUILD_NUMBER}
+                        docker push ${USERNAME-ITI}/iti-aswan-bakehouse:${BUILD_NUMBER}
+                    """
+                }
             }
         }
         stage('deploy') {
