@@ -1,5 +1,5 @@
 pipeline {
-    agent { label "iti-qena-task" }
+    agent any
 
     stages {
         stage('build') {
