@@ -13,7 +13,7 @@ pipeline {
                 echo 'test'
                 sh """
                     echo "build number is ${BUILD_NUMBER}"
-#                    docker ps
+                    docker ps
                     curl --help
                 """
             }
