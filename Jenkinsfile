@@ -7,7 +7,7 @@ pipeline {
                 echo 'build'
                 sh "echo ${BUILD_NUMBER}"
             }
-#        }
+        }
         stage('test') {
             steps {
                 echo 'test'
