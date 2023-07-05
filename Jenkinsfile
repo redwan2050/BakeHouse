@@ -21,7 +21,6 @@ pipeline {
         stage('publish') {
             steps {
                 echo 'publish'
-                gcloud init
             }
         }
         stage('sonarqube') {
